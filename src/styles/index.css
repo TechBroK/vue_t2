@@ -1,0 +1,7 @@
+:root{
+  --container-max:1440px;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;color:#0f172a;background:#f8fafc}
+.container{max-width:var(--container-max);margin:0 auto;padding:2rem}
+.btn{cursor:pointer}

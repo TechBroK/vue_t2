@@ -1,5 +1,43 @@
-# Vue 3 + Vite
+# TicketFlow (Vue)
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is a Vue 3 + Vite port of the TicketFlow demo app. It's client-only, uses Pinia for state, and persists tickets/auth to localStorage for demo purposes.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+Quick start
+
+```powershell
+cd C:\Users\HomePC\Development\vue_t2
+npm install
+npm run dev
+```
+
+Build and deploy (GitHub Pages)
+
+```powershell
+npm run build
+npm run deploy
+```
+
+Keys & storage
+
+- Tickets localStorage key: `tf:tickets:v1`
+- Auth session key: `ticketapp_session`
+- Auth user key: `ticketapp_user`
+
+Validation rules
+
+- Title and status are required.
+- Status must be one of `open`, `in_progress`, `closed`.
+- Description max length 1000.
+- Priority: Low / Medium / High.
+
+Project structure
+
+- src/main.js - app bootstrap
+- src/router - vue-router setup
+- src/stores - Pinia stores
+- src/components - Header, Footer, NotificationToasts, TicketForm, TicketList, TicketItem
+- src/pages - Landing, Auth (login/signup), Dashboard, TicketPage, NotFound
+
+Notes
+
+This is a demo app: do NOT use localStorage for real authentication in production.

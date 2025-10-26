@@ -1,0 +1,9 @@
+/* tickets layout */
+.ticket-table th{background:#e6f2ff;color:#0369a1;padding:0.6rem;text-align:left}
+.ticket-table td{padding:0.6rem}
+.ticket-table tr.even{background:#eaf6ff}
+.ticket-table tr.odd{background:#fff}
+
+.badge.open{background:#0ea5e9}
+.badge.in_progress{background:#f59e0b}
+.badge.closed{background:#6b7280}
