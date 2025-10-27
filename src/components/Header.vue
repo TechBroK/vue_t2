@@ -7,13 +7,14 @@
           <path d="M6 12h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" />
         </svg>
         <span class="brand-text">TicketFlow</span>
+        <span v-if="isAuth && displayName" class="greeting">Hi, {{ displayName }}</span>
       </div>
 
-      <button class="hamburger" :aria-expanded="menuOpen.toString()" @click="toggleMenu" aria-label="Toggle navigation">
+      <button ref="hamburgerRef" class="hamburger" aria-controls="main-nav" :aria-expanded="menuOpen.toString()" @click="toggleMenu" :aria-label="menuOpen ? 'Close navigation' : 'Open navigation'">
         <span class="bar" :class="{open: menuOpen}"></span>
       </button>
 
-      <nav class="main-nav" :class="{open: menuOpen}" aria-label="Main navigation" @click="navClick">
+      <nav id="main-nav" ref="navRef" class="main-nav" :class="{open: menuOpen}" aria-label="Main navigation" @click="navClick">
         <ul>
           <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/dashboard">Dashboard</router-link></li>
@@ -29,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { useNotificationStore } from '../stores/notifications'
 import { useRouter } from 'vue-router'
@@ -38,8 +39,15 @@ const menuOpen = ref(false)
 const auth = useAuthStore()
 const notify = useNotificationStore()
 const router = useRouter()
+const navRef = ref(null)
+const hamburgerRef = ref(null)
 
 const isAuth = computed(() => !!auth.session)
+const displayName = computed(() => {
+  const u = auth.user || {}
+  // prefer name, fallback to email
+  return (u.name && u.name.trim()) ? u.name.trim() : (u.email ? u.email.split('@')[0] : '')
+})
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
@@ -52,6 +60,36 @@ function doLogout() {
   notify.show('Logged out', { type: 'success' })
   router.push('/')
 }
+
+function onKeydown(e) {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    if (menuOpen.value) {
+      menuOpen.value = false
+      // return focus to hamburger
+      nextTick(() => hamburgerRef.value && hamburgerRef.value.focus())
+    }
+  }
+}
+
+watch(menuOpen, async (val) => {
+  if (val) {
+    // open: focus first focusable nav item
+    await nextTick()
+    const navEl = navRef.value
+    if (navEl) {
+      const first = navEl.querySelector('a,button')
+      if (first && typeof first.focus === 'function') first.focus()
+    }
+    document.addEventListener('keydown', onKeydown)
+  } else {
+    document.removeEventListener('keydown', onKeydown)
+    // when closed, return focus to hamburger
+    await nextTick()
+    if (hamburgerRef.value && typeof hamburgerRef.value.focus === 'function') hamburgerRef.value.focus()
+  }
+})
+
+onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
 </script>
 
 <style scoped>
@@ -67,6 +105,8 @@ function doLogout() {
 .main-nav a { color:inherit; text-decoration:none }
 .btn.ghost { background:transparent; border:1px solid rgba(255,255,255,0.15); color:inherit; padding:0.35rem 0.6rem; border-radius:6px }
 .nav-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:50 }
+
+.greeting { margin-left:0.6rem; color: rgba(255,255,255,0.95); font-weight:600; font-size:0.95rem }
 
 @media (max-width:900px){
   .hamburger { display:block }

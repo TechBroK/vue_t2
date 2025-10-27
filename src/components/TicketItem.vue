@@ -1,6 +1,6 @@
 <template>
   <div class="actions">
-    <button v-if="ticket.status !== 'closed'" class="complete" @click="markClosed">✓</button>
+  <button v-if="ticket.status !== 'closed'" class="complete" @click="markClosed" :aria-label="`Mark ${ticket.title} closed`">✓</button>
     <button @click="editing = !editing" class="btn ghost">{{ editing ? 'Cancel' : 'Edit' }}</button>
     <button @click="doDelete" class="btn danger">Delete</button>
   </div>
@@ -18,9 +18,11 @@ const tickets = useTicketStore()
 const notify = useNotificationStore()
 
 function markClosed(){
-  if (!confirm('Mark ticket as closed?')) return
+  if (!confirm('Mark ticket as completed?')) return
+  const prev = props.ticket.status
   tickets.updateTicket(props.ticket.id, { status: 'closed' })
-  notify.show('Ticket marked closed', { type: 'success' })
+  // show toast with undo action
+  notify.show('Ticket marked closed', { type: 'success', duration: 6000, action: { label: 'Undo', callback: () => { tickets.updateTicket(props.ticket.id, { status: prev }) } } })
   emit('updated')
 }
 function doDelete(){

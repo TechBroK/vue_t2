@@ -1,9 +1,16 @@
 /* tickets layout */
-.ticket-table th{background:#e6f2ff;color:#0369a1;padding:0.6rem;text-align:left}
-.ticket-table td{padding:0.6rem}
+/* tickets layout */
+.ticket-table{width:100%;border-collapse:collapse}
+.ticket-table th{background:#e6f2ff;color:#0369a1;padding:0.8rem;text-align:left;border-bottom:2px solid rgba(3,105,161,0.06)}
+.ticket-table td{padding:0.75rem;border-bottom:1px solid rgba(2,6,23,0.04);vertical-align:middle}
 .ticket-table tr.even{background:#eaf6ff}
 .ticket-table tr.odd{background:#fff}
+.ticket-table tr:hover{background:#dff4ff}
 
-.badge.open{background:#0ea5e9}
-.badge.in_progress{background:#f59e0b}
-.badge.closed{background:#6b7280}
+.badge{display:inline-block;padding:0.18rem 0.45rem;border-radius:8px;font-weight:600;font-size:0.85rem}
+.badge.open{background:#16a34a;color:#fff} /* open -> green tone */
+.badge.in_progress{background:#f59e0b;color:#fff}
+.badge.closed{background:#6b7280;color:#fff}
+
+.complete-btn{background:#16a34a;color:#fff;border-radius:999px;width:36px;height:36px;border:0;display:inline-flex;align-items:center;justify-content:center}
+.complete-btn[disabled]{opacity:0.6}

@@ -41,3 +41,14 @@ Project structure
 Notes
 
 This is a demo app: do NOT use localStorage for real authentication in production.
+
+Test user (quick):
+
+- Email: test@example.com
+- Password: password
+
+If you prefer, create an account via Sign up and then log in.
+
+Accessibility & notes:
+- Header and mobile nav include aria attributes and keyboard focus styles.
+- Toasts use aria-live for screen-reader announcements.

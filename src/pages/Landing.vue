@@ -1,49 +1,189 @@
 <template>
   <main class="landing">
-    <div class="container hero-inner" id="top">
-      <div class="hero-content">
-        <h1>TicketFlow — manage tasks with confidence</h1>
-        <p class="lead">Create, track and close tickets. Fast, lightweight and local-first.</p>
-        <div class="hero-ctas">
-          <router-link class="btn primary" :to="{ name: 'Auth', query: { page: 'login' } }">Login</router-link>
-          <button class="btn ghost" @click="scrollToFeatures">Get Started</button>
+    <section class="hero">
+      <div class="circle large" aria-hidden="true"></div>
+
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-title">TicketFlow</h1>
+          <p class="hero-sub">
+            Simple, reliable ticket management to track bugs, features, and tasks — fast and friendly.
+          </p>
+
+          <div class="hero-ctas">
+            <button
+              class="btn primary"
+              type="button"
+              @click="scrollToFeatures"
+            >
+              Get Started
+            </button>
+            <router-link class="btn ghost" to="/auth/login">Login</router-link>
+          </div>
         </div>
       </div>
-      <div class="hero-decor">
-        <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none"><path fill="#f8fafc" d="M0,40 C360,120 1080,0 1440,40 L1440,120 L0,120 Z"></path></svg>
-      </div>
-    </div>
 
-    <section class="decor-cards" id="features">
-      <div class="container feature-wrapper">
-        <div class="feature-boxes">
-          <div class="box">Fast—create tickets in seconds</div>
-          <div class="box">Local-first—data stays on your device</div>
-          <div class="box">Accessible and responsive</div>
+      <svg
+        class="hero-wave"
+        viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          fill="rgba(14,165,233,0.1)"
+          d="M0,224L48,202.7C96,181,192,139,288,144C384,149,480,203,576,224C672,245,768,235,864,218.7C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+        ></path>
+      </svg>
+    </section>
+
+    <section class="decor-cards">
+      <div class="container">
+        <div ref="boxesRef" class="feature-boxes centered" id="decorFeatureBoxes">
+          <div class="box">🎫 Create &amp; assign tickets</div>
+          <div class="box">📊 Prioritize &amp; track progress</div>
+          <div class="box">🤝 Collaborate with your team</div>
         </div>
       </div>
     </section>
 
+    <section class="features">
+      <div class="container">
+        <h2>Why Choose TicketFlow?</h2>
+        <div class="feature-grid">
+          <div class="card">
+            <h3>Fast &amp; Intuitive</h3>
+            <p>Streamlined interface for managing tickets effortlessly.</p>
+          </div>
+          <div class="card">
+            <h3>Secure Sessions</h3>
+            <p>Protected routes ensure your data and tasks stay private.</p>
+          </div>
+          <div class="card">
+            <h3>Cross-Platform</h3>
+            <p>Fully responsive across desktop, tablet, and mobile devices.</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </template>
 
 <script setup>
-function scrollToFeatures(){
-  const el = document.getElementById('features')
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const boxesRef = ref(null)
+
+function scrollToFeatures() {
+  const target = document.getElementById('decorFeatureBoxes')
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
+
+onMounted(() => {
+  const el = boxesRef.value
+  if (!el) return
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          el.classList.add('is-visible')
+          io.unobserve(el)
+        }
+      })
+    }, { threshold: 0.15 })
+    io.observe(el)
+
+    // cleanup
+    onBeforeUnmount(() => io.disconnect())
+  } else {
+    el.classList.add('is-visible')
+  }
+})
 </script>
 
 <style scoped>
-.landing{ min-height:100vh; display:flex; flex-direction:column }
-.hero-inner { display:flex; align-items:center; justify-content:center; padding:4rem 0 }
-.hero-content { max-width:900px; text-align:center }
-.lead { color:#6b7280 }
-.hero-ctas { margin-top:1rem; display:flex; gap:0.6rem; justify-content:center }
-.btn.primary{ background:#0ea5e9; color:#fff; padding:0.6rem 1rem; border-radius:8px }
-.btn.ghost{ background:transparent; border:1px solid #cbd5e1; padding:0.5rem 0.9rem; border-radius:8px }
-.decor-cards{ background:linear-gradient(180deg,#f8fafc,#eef2ff); padding:2rem 0 }
-.feature-boxes{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap }
-.box{ background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.06); min-width:220px; text-align:center }
-.hero-wave{ width:100%; height:80px; margin-top:2rem }
+* { box-sizing: border-box }
+
+.landing { display:flex; flex-direction:column; min-height:100vh }
+
+.hero { position:relative; min-height:100vh; padding:4rem 0 2rem; background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%); overflow:hidden; display:flex; align-items:center }
+
+.hero-inner { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:2rem; width:100% }
+
+.hero-content { max-width:900px; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center }
+
+.hero-title { font-size:3rem; font-weight:800; color:#0ea5e9; margin-bottom:1rem }
+.hero-sub { font-size:1.125rem; color:#04263b; margin-bottom:2rem }
+
+.hero-ctas { display:flex; gap:0.75rem; justify-content:center; align-items:center; margin-top:1rem }
+.hero-ctas .btn { margin:0 }
+
+.btn { font:inherit; border:0; cursor:pointer; padding:.6rem 1rem; border-radius:10px }
+.btn.primary { background-color:#0ea5e9; color:#fff }
+.btn.primary:hover { background-color:#0284c7 }
+.btn.ghost { border:2px solid #0ea5e9; color:#0ea5e9; background:transparent }
+.btn.ghost:hover { background-color:#e0f2fe; color:#000 }
+
+.circle.large { position:absolute; top:-50px; right:-80px; width:250px; height:250px; border-radius:50%; background:rgba(14,165,233,0.15); z-index:0 }
+
+.hero-wave { position:absolute; bottom:0; left:0; width:100%; height:220px }
+
+.feature-boxes { display:flex; flex-direction:column; gap:1rem; z-index:1 }
+
+@keyframes slideUpFade { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+
+.decor-cards .feature-boxes .box { opacity:0; transform:translateY(18px) }
+.decor-cards .feature-boxes.is-visible .box,
+.decor-cards .feature-boxes.centered.is-visible .box { animation-name:slideUpFade; animation-duration:560ms; animation-fill-mode:both; animation-timing-function:cubic-bezier(.2,.9,.22,1) }
+.decor-cards .feature-boxes.is-visible .box:nth-child(1) { animation-delay:80ms }
+.decor-cards .feature-boxes.is-visible .box:nth-child(2) { animation-delay:200ms }
+.decor-cards .feature-boxes.is-visible .box:nth-child(3) { animation-delay:320ms }
+
+@media (prefers-reduced-motion: reduce) { .decor-cards .feature-boxes .box { transition:none; animation:none; transform:none; opacity:1 } }
+
+.decor-cards { background:#fff; padding:3.5rem 0; position:relative; overflow:hidden; display:flex; justify-content:center; align-items:center }
+.decor-cards .container { display:flex; justify-content:center; align-items:center }
+
+.feature-boxes.centered { display:flex; flex-direction:column; align-items:center; gap:1.25rem; width:100%; max-width:980px; margin-left:auto; margin-right:auto; box-sizing:border-box; padding-left:1rem; padding-right:1rem }
+
+.decor-cards .feature-boxes .box { width:100%; background:#ffffff; color:#04263b; padding:1.25rem 1.5rem; border-radius:14px; box-shadow:0 18px 40px rgba(2,6,23,0.45); font-size:1.05rem; display:flex; align-items:center; gap:0.75rem }
+
+@media (min-width:980px) {
+  .feature-boxes.centered { flex-direction:row; align-items:stretch; justify-content:center }
+  .feature-boxes.centered .box { flex:1 1 0 }
+}
+
+.hero + .decor-cards { margin-top:-60px }
+
+@media (max-width:720px) { .decor-cards { padding:2rem 0 } .decor-cards .feature-boxes .box { width:100% } .hero + .decor-cards { margin-top:-30px } }
+
+.features { padding:5rem 0; background-color:#f9fafb }
+.features h2 { text-align:center; font-size:2rem; color:#0ea5e9; margin-bottom:2.5rem }
+.feature-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem }
+.card { background:#fff; border-radius:1rem; padding:2rem; box-shadow:0 4px 12px rgba(0,0,0,0.05); text-align:center }
+.card h3 { color:#0ea5e9; margin-bottom:0.75rem }
+
+/* footer helpers (kept small) */
+.site-footer { text-align:center; padding:1.5rem; background:rgba(14,165,233,0.05); color:#374151; font-size:0.95rem }
+.footer-inner { display:flex; align-items:center; justify-content:space-between; gap:1rem }
+.footer-left { display:flex; flex-direction:column; gap:6px }
+.footer-left .brand { font-weight:700; font-size:1.05rem }
+.footer-nav { display:flex; gap:12px; align-items:center }
+.footer-nav a { color:inherit; text-decoration:none; padding:6px 8px; border-radius:6px }
+.footer-nav a:hover, .footer-nav a:focus { background: rgba(14,165,233,0.08); outline:none }
+.footer-social { display:flex; gap:8px; align-items:center }
+.footer-social .social-link { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; background:transparent }
+
+@media (max-width:768px) {
+  .hero-inner { flex-direction:column; text-align:center }
+  .feature-boxes { align-items:center }
+  .feature-boxes .box { width:100%; max-width:320px }
+  .hero-title { font-size:2.2rem }
+  .hero-sub { font-size:1rem }
+  .footer-inner { flex-direction:column; align-items:center; text-align:center }
+  .footer-left { align-items:center }
+  .footer-nav { flex-direction:column; gap:8px; margin-top:8px }
+  .footer-nav a { padding:10px 14px; width:100%; max-width:260px }
+  .footer-social { margin-top:10px }
+}
 </style>

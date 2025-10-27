@@ -27,6 +27,7 @@ export function login({ email, password }) {
 
 export function logout() {
   localStorage.removeItem(SESSION_KEY)
+  try { localStorage.removeItem(USER_KEY) } catch(e) {}
 }
 
 export function getSession() {

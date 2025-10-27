@@ -15,7 +15,7 @@
         <p class="big">{{ tickets.counts.in_progress }}</p>
       </div>
       <div class="card">
-        <h3>Closed</h3>
+        <h3>Resolved</h3>
         <p class="big">{{ tickets.counts.closed }}</p>
       </div>
     </div>
@@ -23,11 +23,7 @@
     <section class="tickets-section">
       <h2>Tickets</h2>
       <TicketForm @saved="refresh" />
-      <TicketList>
-        <template #default="{ ticket }">
-          <TicketItem :ticket="ticket" @deleted="refresh" @updated="refresh" />
-        </template>
-      </TicketList>
+      <TicketList />
     </section>
   </main>
 </template>
@@ -36,7 +32,6 @@
 import { onMounted } from 'vue'
 import TicketForm from '../components/TicketForm.vue'
 import TicketList from '../components/TicketList.vue'
-import TicketItem from '../components/TicketItem.vue'
 import { useTicketStore } from '../stores/tickets'
 
 const tickets = useTicketStore()

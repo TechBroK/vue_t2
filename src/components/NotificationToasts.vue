@@ -1,10 +1,12 @@
 <template>
   <div class="tf-toasts" aria-live="polite">
-    <div v-for="t in store.toasts" :key="t.id" class="toast" :class="t.type">
-      <div class="message">{{ t.message }}</div>
-      <div v-if="t.action" class="action"><button @click="runAction(t)">Undo</button></div>
-      <button class="close" @click="store.remove(t.id)">×</button>
-    </div>
+    <div v-for="t in store.toasts" :key="t.id" class="toast" :class="t.type" role="status" aria-atomic="true">
+        <div class="message">{{ t.message }}</div>
+        <div v-if="t.action" class="action">
+          <button @click="runAction(t)" :aria-label="`Action: ${t.action.label}`">{{ t.action.label }}</button>
+        </div>
+        <button class="close" @click="store.remove(t.id)" aria-label="Dismiss notification">×</button>
+      </div>
   </div>
 </template>
 
@@ -12,10 +14,8 @@
 import { useNotificationStore } from '../stores/notifications'
 const store = useNotificationStore()
 function runAction(t){
-  if (t.action) {
-    t.action()
-    store.remove(t.id)
-  }
+  if (!t || !t.id) return
+  store.runAction(t.id)
 }
 </script>
 
