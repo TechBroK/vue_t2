@@ -13,14 +13,16 @@ export const useAuthStore = defineStore('auth', {
     signup(payload) {
       const res = svcSignup(payload)
       this.session = res
-      this.user = { email: payload.email }
+      // svcSignup stores the full user object (including name) in localStorage
+      this.user = currentUser() || { email: payload.email, name: payload.name }
       return res
     },
     login(payload) {
       const res = svcLogin(payload)
       if (res) {
         this.session = res
-        this.user = { email: payload.email }
+        // prefer the stored user (may contain name), fall back to email-only
+        this.user = currentUser() || { email: payload.email }
       }
       return res
     },

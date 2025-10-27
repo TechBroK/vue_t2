@@ -15,7 +15,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory('/React_4_t2/'),
+  history: createWebHistory('/vue_t2/'),
   routes
 })
 
